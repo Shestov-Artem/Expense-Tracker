@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование расходов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            background: white;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .delete-btn {
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ссылка на главную страницу -->
+    <a href="{% url 'home' %}" style="display: block; text-align: center; margin-bottom: 20px; font-size: 18px;">
+        📊 Назад к диаграмме
+    </a>
+
+    <h1>Редактирование расходов</h1>
+
+    <!-- Форма для добавления новых расходов -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="category" placeholder="Категория" required>
+        <input type="number" name="amount" placeholder="Сумма" required>
+        <button type="submit">Добавить расход</button>
+    </form>
+
+    <!-- Таблица с текущими расходами -->
+    <table>
+        <tr>
+            <th>Категория</th>
+            <th>Сумма</th>
+            <th>Действие</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount }} ₽</td>
+            <td>
+                <form method="post" action="{% url 'delete_expense' expense.id %}">
+                    {% csrf_token %}
+                    <button class="delete-btn" type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
